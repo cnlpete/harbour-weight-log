@@ -68,20 +68,17 @@ Page {
         for ( var y = ymin; y < ymax; ++y )
             ctx.fillText( y, xt(xmin), yt(y) - 5 );
 
-        ctx.beginPath(); ctx.strokeStyle = "green";
-        run( function(d, w, a) { lineTo( d - start, w ); } );
-        ctx.stroke();
-
-        ctx.beginPath(); ctx.strokeStyle = "red";
-        run( function(d, w, a) { lineTo( d - start, a ); } );
-        ctx.stroke();
-
         ctx.fillStyle = Theme.secondaryHighlightColor;
         run( function(d, w, a) {
             ctx.beginPath();
-            circle( d - start, a, 5 );
+            circle( d - start, w, 5 );
             ctx.fill();
         } );
+
+        ctx.beginPath(); 
+        ctx.strokeStyle = Theme.highlightColor;
+        run( function(d, w, a) { lineTo( d - start, a ); } );
+        ctx.stroke();
 
         ctx.restore();
     }
