@@ -57,7 +57,8 @@ Page {
         ctx.save();
         ctx.clearRect(0, 0, plot.width, plot.height);
 
-        ctx.beginPath(); ctx.strokeStyle = ctx.fillStyle = "gray";
+        ctx.beginPath();
+        ctx.strokeStyle = ctx.fillStyle = Theme.rgba(Theme.primaryColor, 0.3);
         for ( var y = ymin; y < ymax; ++y ) {
             moveTo( xmin, y ); lineTo( xmax, y );
         }
@@ -75,7 +76,7 @@ Page {
         run( function(d, w, a) { lineTo( d - start, a ); } );
         ctx.stroke();
 
-        ctx.fillStyle = "red";
+        ctx.fillStyle = Theme.secondaryHighlightColor;
         run( function(d, w, a) {
             ctx.beginPath();
             circle( d - start, a, 5 );
