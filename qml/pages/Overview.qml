@@ -53,6 +53,7 @@ Page {
         function lineTo(x, y) { ctx.lineTo( xt(x), yt(y) ); }
         function circle(x, y, r) { ctx.arc( xt(x), yt(y), r, 0, 360 ); }
 
+        ctx.lineWidth = 2;
         ctx.save();
         ctx.clearRect(0, 0, plot.width, plot.height);
 
