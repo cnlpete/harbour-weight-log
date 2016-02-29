@@ -63,6 +63,7 @@ Page {
         }
         ctx.stroke();
 
+        ctx.font = Theme.fontSizeExtraSmall + "px " + Theme.fontFamily;
         for ( var y = ymin; y < ymax; ++y )
             ctx.fillText( y, xt(xmin), yt(y) - 5 );
 
