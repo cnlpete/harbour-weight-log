@@ -86,7 +86,7 @@ function average(from, to) {
 
 function plot(from, to, cb) {
     return withDB( function(tx) {
-        var res = tx.executeSql("select * from entries where date >= ? and date <= ? order by date",
+        var res = tx.executeSql("select * from entries where date >= ? and date <= ? order by date desc",
                                 [from - 10, to]);
         var weight = res.rows.item(0).weight;
         var day = res.rows.item(0).date - 1;
