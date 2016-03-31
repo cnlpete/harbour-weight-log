@@ -21,7 +21,7 @@ Page {
     }
 
     function paint(ctx) {
-        var start = today() - 28;
+        var start = today() - 35;
         function run(cb) { DB.plot( start, today(), cb ); }
 
         var xmin = 1000, xmax = 0, ymin = 1000, ymax = 0;
@@ -113,13 +113,14 @@ Page {
             anchors.fill: parent
 
             PageHeader {
+		id: header
                 title: "Weight Log"
             }
 
             Canvas {
                 id: plot
-                height: overview.height / 2
                 width: parent.width
+                height: overview.height - 3 * header.height
                 contextType: "2d"
                 onAvailableChanged: overview.refresh()
                 onPaint: overview.paint(getContext("2d"));
