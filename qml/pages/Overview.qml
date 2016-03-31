@@ -14,8 +14,8 @@ Page {
     }
 
     function refresh() {
-        main.avg_month = avg(28);
-        main.avg_week = avg(7);
+        main.avg_month = Math.round(avg(28) * 10) / 10;
+        main.avg_week = Math.round(avg(7) * 10) / 10;
         plot.requestPaint();
         console.log("hi there from refresh...");
     }
@@ -29,8 +29,10 @@ Page {
             console.log("plot: " + (d - start) + ", " + w + ", " + a);
             xmin = Math.min( xmin, d - start );
             xmax = Math.max( xmax, d - start );
-            ymin = Math.ceil( Math.min( ymin, w, a ) );
-            ymax = Math.floor( Math.max( ymax, w, a ) );
+            if (w > 0) {
+                ymin = Math.ceil(Math.min(ymin, w, a));
+                ymax = Math.floor(Math.max(ymax, w, a));
+            }
         } );
 
         xmax = xmax - xmin < 8 ? xmin + 8 : xmax;
@@ -71,7 +73,7 @@ Page {
         ctx.fillStyle = Theme.secondaryHighlightColor;
         run( function(d, w, a) {
             ctx.beginPath();
-            circle( d - start, w, 5 );
+	    if (w > 0) circle( d - start, w, 5 );
             ctx.fill();
         } );
 
