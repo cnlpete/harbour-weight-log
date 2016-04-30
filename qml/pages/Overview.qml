@@ -4,9 +4,10 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../storage.js" as DB
 
-
 Page {
     id: overview
+    property alias timeRange: periodSelector.currentIndex
+
     Component.onCompleted: refresh()
 
     function today() {
@@ -21,12 +22,28 @@ Page {
     }
 
     function paint(ctx) {
-        var start = today() - 35;
+        var days = 35;
+        var dotSize = 5;
+        switch (overview.timeRange) {
+        case 2:
+            days = 371;
+            dotSize = 2;
+            break;
+        case 1:
+            days = 91;
+            dotSize = 3;
+            break;
+        case 0:
+        default:
+            days = 35;
+            break;
+        }
+        var start = today() - days;
         function run(cb) { DB.plot( start, today(), cb ); }
 
         var xmin = 1000, xmax = 0, ymin = 1000, ymax = 0;
         run( function(d, w, a) {
-            console.log("plot: " + (d - start) + ", " + w + ", " + a);
+            // console.log("plot: " + (d - start) + ", " + w + ", " + a);
             xmin = Math.min( xmin, d - start );
             xmax = Math.max( xmax, d - start );
             if (w > 0) {
@@ -73,7 +90,7 @@ Page {
         ctx.fillStyle = Theme.secondaryHighlightColor;
         run( function(d, w, a) {
             ctx.beginPath();
-	    if (w > 0) circle( d - start, w, 5 );
+            if (w > 0) circle( d - start, w, dotSize );
             ctx.fill();
         } );
 
@@ -91,6 +108,7 @@ Page {
 
     SilicaFlickable {
         anchors.fill: parent
+        contentHeight: column.height
 
         PullDownMenu {
             MenuItem {
@@ -103,8 +121,6 @@ Page {
             }
         }
 
-        contentHeight: column.height
-
         Column {
             id: column
 
@@ -113,14 +129,26 @@ Page {
             anchors.fill: parent
 
             PageHeader {
-		id: header
+                id: header
                 title: "Weight Log"
             }
 
+            ComboBox {
+                id: periodSelector
+                width: overview.width
+                label: "Period"
+
+                menu: ContextMenu {
+                    MenuItem { text: "One Month" }
+                    MenuItem { text: "Three Months" }
+                    MenuItem { text: "One Year" }
+                }
+                onCurrentIndexChanged: overview.refresh()
+            }
             Canvas {
                 id: plot
                 width: parent.width
-                height: overview.height - 3 * header.height
+                height: overview.height - 4 * header.height
                 contextType: "2d"
                 onAvailableChanged: overview.refresh()
                 onPaint: overview.paint(getContext("2d"));
@@ -140,5 +168,3 @@ Page {
         }
     }
 }
-
-
