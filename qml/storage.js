@@ -86,7 +86,7 @@ function average(from, to) {
 
 function plot(from, to, cb) {
     return withDB( function(tx) {
-        var res = tx.executeSql("select * from entries where date >= ? and date <= ? order by date",
+        var res = tx.executeSql("select * from entries where date >= ? and date <= ? order by date desc",
                                 [from - 10, to]);
         var weight = res.rows.item(0).weight;
         var day = res.rows.item(0).date - 1;
@@ -103,7 +103,7 @@ function plot(from, to, cb) {
                 running = running + (weight - running) / 10;
 
                 if ( day >= from )
-                    cb(day, weight, running);
+                    cb(day, day != r.date ? -1 : weight, running);
             }
         }
     } );
