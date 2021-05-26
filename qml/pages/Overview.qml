@@ -15,13 +15,13 @@ Page {
 
     function refresh() {
         main.avg_month = Math.round(avg(28) * 10) / 10;
-        main.avg_week = Math.round(avg(7) * 10) /10;
+        main.avg_week = Math.round(avg(7) * 10) / 10;
         plot.requestPaint();
         console.log("hi there from refresh...");
     }
 
     function paint(ctx) {
-        var start = today() - 28;
+        var start = today() - 35;
         function run(cb) { DB.plot( start, today(), cb ); }
 
         var xmin = 1000, xmax = 0, ymin = 1000, ymax = 0;
@@ -29,8 +29,10 @@ Page {
             console.log("plot: " + (d - start) + ", " + w + ", " + a);
             xmin = Math.min( xmin, d - start );
             xmax = Math.max( xmax, d - start );
-            ymin = Math.ceil( Math.min( ymin, w, a ) );
-            ymax = Math.floor( Math.max( ymax, w, a ) );
+            if (w > 0) {
+                ymin = Math.ceil(Math.min(ymin, w, a));
+                ymax = Math.floor(Math.max(ymax, w, a));
+            }
         } );
 
         xmax = xmax - xmin < 8 ? xmin + 8 : xmax;
@@ -53,32 +55,32 @@ Page {
         function lineTo(x, y) { ctx.lineTo( xt(x), yt(y) ); }
         function circle(x, y, r) { ctx.arc( xt(x), yt(y), r, 0, 360 ); }
 
+        ctx.lineWidth = 2;
         ctx.save();
         ctx.clearRect(0, 0, plot.width, plot.height);
 
-        ctx.beginPath(); ctx.strokeStyle = ctx.fillStyle = Theme.secondaryColor;
+        ctx.beginPath();
+        ctx.strokeStyle = ctx.fillStyle = Theme.rgba(Theme.primaryColor, 0.3);
         for ( var y = ymin; y < ymax; ++y ) {
             moveTo( xmin, y ); lineTo( xmax, y );
         }
         ctx.stroke();
 
+        ctx.font = Theme.fontSizeExtraSmall + "px " + Theme.fontFamily;
         for ( var y = ymin; y < ymax; ++y )
             ctx.fillText( y, xt(xmin), yt(y) - 5 );
 
-        ctx.beginPath(); ctx.strokeStyle = Theme.highlightColor;
-        run( function(d, w, a) { lineTo( d - start, w ); } );
-        ctx.stroke();
-
-        ctx.beginPath(); ctx.strokeStyle = Theme.primaryColor;
-        run( function(d, w, a) { lineTo( d - start, a ); } );
-        ctx.stroke();
-
-        ctx.fillStyle = Theme.primaryColor;
+        ctx.fillStyle = Theme.secondaryHighlightColor;
         run( function(d, w, a) {
             ctx.beginPath();
-            circle( d - start, a, 5 );
+            if (w > 0) circle( d - start, w, 5 );
             ctx.fill();
         } );
+
+        ctx.beginPath(); 
+        ctx.strokeStyle = Theme.highlightColor;
+        run( function(d, w, a) { lineTo( d - start, a ); } );
+        ctx.stroke();
 
         ctx.restore();
     }
@@ -111,13 +113,14 @@ Page {
             anchors.fill: parent
 
             PageHeader {
+                id: header
                 title: "Weight Log"
             }
 
             Canvas {
                 id: plot
-                height: overview.height / 2
                 width: parent.width
+                height: overview.height - 3 * header.height
                 contextType: "2d"
                 onAvailableChanged: overview.refresh()
                 onPaint: overview.paint(getContext("2d"));
