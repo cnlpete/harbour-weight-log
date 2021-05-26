@@ -16,7 +16,7 @@ Page {
 
     function refresh() {
         main.avg_month = Math.round(avg(28) * 10) / 10;
-        main.avg_week = Math.round(avg(7) * 10) /10;
+        main.avg_week = Math.round(avg(7) * 10) / 10;
         plot.requestPaint();
         console.log("hi there from refresh...");
     }
