@@ -103,7 +103,7 @@ function plot(from, to, cb) {
                 running = running + (weight - running) / 10;
 
                 if ( day >= from )
-                    cb(day, weight, running);
+                    cb(day, day != r.date ? -1 : weight, running);
             }
         }
     } );
