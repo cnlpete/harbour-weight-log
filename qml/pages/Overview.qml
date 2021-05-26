@@ -73,7 +73,7 @@ Page {
         ctx.fillStyle = Theme.secondaryHighlightColor;
         run( function(d, w, a) {
             ctx.beginPath();
-	    if (w > 0) circle( d - start, w, 5 );
+            if (w > 0) circle( d - start, w, 5 );
             ctx.fill();
         } );
 
@@ -113,7 +113,7 @@ Page {
             anchors.fill: parent
 
             PageHeader {
-		id: header
+                id: header
                 title: "Weight Log"
             }
 
